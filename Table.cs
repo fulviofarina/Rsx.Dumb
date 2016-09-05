@@ -9,6 +9,18 @@ namespace Rsx
 {
     public partial class Dumb
     {
+
+        public static void SetField(ref string MCL, ref IEnumerable<string> arrayTxtFile, string fieldTitle, string units)
+        {
+            string x = arrayTxtFile.FirstOrDefault(o => o.Contains(fieldTitle));
+
+            if (string.IsNullOrEmpty(x)) return;
+
+            x = x.Replace(fieldTitle, null);
+            if (!string.IsNullOrEmpty(units)) x = x.Replace(units, null);
+            MCL = x.Trim(null);
+        }
+
         public static void CleanColumnExpressions(DataTable table)
         {
             IEnumerable<DataColumn> columns = table.Columns.OfType<DataColumn>().Where(c => c.Expression.CompareTo(string.Empty) != 0).ToArray();
