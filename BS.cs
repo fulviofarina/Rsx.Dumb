@@ -1,12 +1,44 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-
+using System.Collections.Generic;
+using System.Collections;
 ///FULVIO
 namespace Rsx
 {
     public partial class Dumb
     {
+
+        public static Hashtable ArrayOfBindings (ref BindingSource bs )
+        {
+
+           
+           
+            Hashtable bslist = new Hashtable();
+            DataSourceUpdateMode mo = DataSourceUpdateMode.OnPropertyChanged;
+            bool t = true;
+            string text = "Text";
+            string column;
+
+
+
+
+            DataTable dt = (bs.DataSource as DataSet).Tables[bs.DataMember];
+       //     Binding diam = new Binding(text, bs, column, t, mo);
+
+            foreach (DataColumn item in dt.Columns)
+            {
+                column = item.ColumnName;
+               // column = Unit.DiameterColumn.ColumnName;
+                Binding b = new Binding(text, bs, column, t, mo);
+                bslist.Add(column,b);
+
+            }
+
+
+
+            return bslist;
+        }
         public static void LinkBS(ref BindingSource BS, DataTable table)
         {
             if (table == null) throw new ArgumentException("table is null", "table");

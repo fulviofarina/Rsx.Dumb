@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,6 +8,40 @@ namespace Rsx
 {
     public partial class Dumb
     {
+
+        /// <summary>
+        /// Gets ToolStripTextBox control content as T-type
+        /// </summary>
+        /// <typeparam name="T">the type that you want to obtain from the control box Text Property</typeparam>
+        /// <param name="mbox">the box = textbox, combobox / tooltipbox, tooltipcombobox</param>
+        /// <returns></returns>
+        public static T GetControlAs<T>( dynamic mbox)
+        {
+            //   ToolStripTextBox mbox = (ToolStripTextBox)control;
+
+            T mass = default(T);
+            Type tipo = typeof(T);
+
+            bool m = string.IsNullOrWhiteSpace(mbox.Text);
+
+
+            if (tipo.Equals(typeof(double)))
+            {
+                double massAux = Convert.ToDouble(mbox.Text);
+
+                mass = (T)Convert.ChangeType(massAux, typeof(T));
+            }
+            else if (tipo.Equals(typeof(string)))
+            {
+                string massAux = mbox.Text.ToString();
+
+                mass = (T)Convert.ChangeType(massAux, typeof(T));
+            }
+
+      
+            return mass;
+        }
+
         public static void FillABox(ComboBox combo, ICollection<string> hs, bool clear, bool AddAsterisk)
         {
             combo.AutoCompleteMode = AutoCompleteMode.Suggest;
