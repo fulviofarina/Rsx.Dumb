@@ -8,7 +8,7 @@ namespace Rsx
 {
    
 
-    public partial class Dumb
+    public static  partial class Dumb
     {
         public static string GetNextName(string prefix, IList<string> items, bool putCaps)
         {
@@ -40,6 +40,13 @@ namespace Rsx
             return c.ToString();
         }
 
+
+
+        /// <summary>
+        /// Forces Dispose = Function to delete IDisposable objects!
+        /// </summary>
+        /// <typeparam name="T">type of IDisposable object</typeparam>
+        /// <param name="objeto">object to disposable that implements IDisposable</param>
         public static void FD<T>(ref T objeto)
         {
             object o = objeto;
@@ -50,6 +57,13 @@ namespace Rsx
                 DataTable table = (DataTable)o;
                 table.Clear();
             }
+            else if (t.Equals(typeof(DataSet)))
+            {
+                DataSet set = (DataSet)o;
+                set.Clear();
+
+            }
+            
             IDisposable disposable = (IDisposable)o;
             disposable.Dispose();
             disposable = null;

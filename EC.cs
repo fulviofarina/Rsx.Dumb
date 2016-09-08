@@ -4,10 +4,14 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
+
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    /// <summary>
+    /// STATIC CLASS FOR CHECKING ROWS & CONTROLS FOR ERRORS
+    /// </summary>
+    public static partial class EC
     {
         public static IEnumerable<DataRow> NotNulls(IEnumerable<DataRow> array, String Field)
         {
@@ -38,11 +42,8 @@ namespace Rsx
         /// <returns></returns>
         public static bool IsNuDelDetch(DataRow row)
         {
-            if (row != null && row.RowState != DataRowState.Deleted && row.RowState != DataRowState.Detached)
-            {
-                return false;
-            }
-            else if (row == null || row.RowState == DataRowState.Deleted || row.RowState == DataRowState.Detached) return true;
+        
+            if (row == null || row.RowState == DataRowState.Deleted || row.RowState == DataRowState.Detached) return true;
             else return false;
         }
 
@@ -62,14 +63,20 @@ namespace Rsx
             Func<T, bool> find = s =>
             {
                 bool errors = false;
-                if (s != null)
-                {
+
+              //  if (s != null)
+              //  {
                     DataRow r = s as DataRow;
-                    if (r.RowState != DataRowState.Detached && r.RowState != DataRowState.Deleted)
-                    {
-                        errors = r.HasErrors;
-                    }
+
+                if (!IsNuDelDetch(r))
+                {
+                    //   if (r.RowState != DataRowState.Detached && r.RowState != DataRowState.Deleted)
+                    // {
+                    errors = r.HasErrors;
+                    // }
                 }
+
+               // }
                 return errors;
             };
 
@@ -96,21 +103,21 @@ namespace Rsx
             {
                 if (row.IsNull(column) || Convert.ToDouble(row[column]) == 0)
                 {
-                    row.SetColumnError(column, "NULL. Not good!");
+                    row.SetColumnError(column, "NULL!");
                 }
             }
             else if (t.Equals(typeof(Int32)))
             {
                 if (row.IsNull(column) || Convert.ToInt32(row[column]) == 0)
                 {
-                    row.SetColumnError(column, "NULL. Not good!");
+                    row.SetColumnError(column, "NULL!");
                 }
             }
             else if (t.Equals(typeof(String)))
             {
                 if (row.IsNull(column) || Convert.ToString(row[column]).CompareTo(String.Empty) == 0)
                 {
-                    row.SetColumnError(column, "NULL. Not good!");
+                    row.SetColumnError(column, "NULL!");
                 }
             }
             else if (t.Equals(typeof(DateTime)))
@@ -149,57 +156,97 @@ namespace Rsx
             }
         }
 
-        public static void CheckRows(DataTable table2, DataColumnChangeEventHandler columnChecker)
+        /// <summary>
+        /// Forces the check-up of a Data Row according to the DataColumnChangeEventHandler given
+        /// </summary>
+        /// <typeparam name="T">DatTable, DataRow[] or DataRow</typeparam>
+        /// <param name="table2">object to check</param>
+        /// <param name="columnChecker">DataColumnChangeEventHandler to use for checking</param>
+        public static void CheckRows<T>(T table2, DataColumnChangeEventHandler columnChecker)
         {
-            DataRow currentRow = null;
-            DataRowChangeEventArgs args = null;
 
-            foreach (DataRow r in table2.Rows)
+            Type tipo = typeof(T);
+
+            if (tipo.Equals(typeof(DataTable)))
             {
-                currentRow = r;
-                if (currentRow.RowState == DataRowState.Unchanged) currentRow.SetModified();
-                args = new DataRowChangeEventArgs(currentRow, DataRowAction.Change);
 
-                Dumb.CheckRowColumn(args, columnChecker);
+                DataTable dt = table2 as DataTable;
+
+               
+                DataRow[] rows = dt.Rows.OfType<DataRow>().ToArray();
+
+                CheckRows(rows, columnChecker);
+
+            }
+            else if (tipo.Equals(typeof(DataRow[])))
+            {
+                IEnumerable<DataRow> rows = table2 as IEnumerable<DataRow>;
+
+                foreach (DataRow r in rows)
+                {
+                    CheckRows(r, columnChecker);
+                }
+            }
+            else if (tipo.Equals(typeof(DataRow)))
+            {
+                DataRow r = table2 as DataRow;
+                DataRow currentRow = null;
+                currentRow = r;
+                DataRowChangeEventArgs args = new DataRowChangeEventArgs(currentRow, DataRowAction.Change);
+
+                if (currentRow.RowState == DataRowState.Unchanged) currentRow.SetModified();
+                EC.CheckRowColumn(args, columnChecker);
                 currentRow.AcceptChanges();
             }
-        }
-
-        public static void CheckRows(DataRow[] rows, DataColumnChangeEventHandler columnChecker)
-        {
-            DataRow currentRow = null;
-            DataRowChangeEventArgs args = null;
-            foreach (DataRow r in rows)
+            else
             {
-                currentRow = r;
-                args = new DataRowChangeEventArgs(currentRow, DataRowAction.Change);
-
-                if (currentRow.RowState == DataRowState.Unchanged) currentRow.SetModified();
-                Dumb.CheckRowColumn(args, columnChecker);
-                currentRow.AcceptChanges();
+                NotImplemented();
             }
         }
 
-        public static void SetRowError(DataRow row, DataColumn column, SystemException ex)
+
+
+        public static void SetRowError(DataRow row, DataColumn column, Exception ex)
         {
-            try
-            {
-                row.SetColumnError(column, ex.Message + "\n\n" + ex.StackTrace);
-            }
-            catch (SystemException nada)
-            {
-            }
+
+          //  if (IsNuDelDetch(row)) return;
+          //  if (column == null) return;
+
+            row.SetColumnError(column, ExceptionMsg(ex));
+
         }
 
-        public static void SetRowError(DataRow row, SystemException ex)
+        public static void SetRowError(DataRow row, Exception ex)
         {
-            try
-            {
-                row.RowError = ex.Message + "\n\n" + ex.StackTrace;
-            }
-            catch (SystemException nada)
-            {
-            }
+
+          //  if (IsNuDelDetch(row)) return;
+
+            row.RowError = ExceptionMsg(ex);
+
+        }
+
+        /// <summary>
+        /// Throws a SystemException with the "Not implemented" message
+        /// </summary>
+        public static void NotImplemented()
+        {
+
+            throw new Exception("Not implemented");
+        }
+
+        /// <summary>
+        /// Returns the message I would like to get from an Exception
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        public static string ExceptionMsg(Exception ex)
+
+        {
+
+
+
+            if (ex == null) return "Exception sent was Empty";
+            else return ex.Message + "\n\n" + ex.StackTrace;
         }
     }
 }

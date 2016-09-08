@@ -6,7 +6,7 @@ using System.Linq;
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    public static partial class Dumb
     {
         public static void AcceptChanges<T>(ref IEnumerable<T> rows)
         {

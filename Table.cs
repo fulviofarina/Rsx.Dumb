@@ -3,12 +3,36 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-
+using System.IO;
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    public static  partial class Dumb
     {
+
+
+        public static bool ReadTable(string path, ref DataTable dt)
+        {
+            //keep this this way, works fine
+            if (File.Exists(path)) //user preferences found...
+            {
+                dt.BeginLoadData();
+                FileInfo info = new FileInfo(path);
+                if (info.Length < 204800)
+                {
+                    dt.ReadXml(path);
+                }
+                else File.Delete(path);
+
+
+                return true;
+                //cleaning
+
+            }
+            else return false;
+
+
+        }
 
         public static void SetField(ref string MCL, ref IEnumerable<string> arrayTxtFile, string fieldTitle, string units)
         {
@@ -243,7 +267,7 @@ namespace Rsx
             Func<T, bool> compare = (i) =>
             {
                 DataRow r = i as DataRow;
-                if (Dumb.IsNuDelDetch(r)) return false;
+                if (EC.IsNuDelDetch(r)) return false;
                 else
                 {
                     if (!r.IsNull(fieldToCompare) && r.Field<object>(fieldToCompare).Equals(valueToCompare)) return true;

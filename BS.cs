@@ -6,9 +6,13 @@ using System.Collections;
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    public static partial class Dumb
     {
-
+        /// <summary>
+        /// Returns a HashTable with "Text" Bindings, where the key is the DataTableColumn.ColumnName of the bound member
+        /// </summary>
+        /// <param name="bs"></param>
+        /// <returns></returns>
         public static Hashtable ArrayOfBindings (ref BindingSource bs )
         {
 

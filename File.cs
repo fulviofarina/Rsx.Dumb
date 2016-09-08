@@ -8,7 +8,7 @@ using System.Linq;
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    public static partial class Dumb
     {
         public static void WriteBytesFile(ref byte[] r, string destFile)
         {

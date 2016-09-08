@@ -7,7 +7,7 @@ using System.Windows.Forms;
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    public static partial class Dumb
     {
         public static String[] ArrayFromColum(DataColumn Column)
         {
@@ -16,7 +16,7 @@ namespace Rsx
             return rowValuesForColumn;
         }
 
-        public string GetRowAsString(ref DataRow r)
+        public static string GetRowAsString(ref DataRow r)
         {
             string content = string.Empty;
             IEnumerable<DataColumn> cols = r.Table.Columns.OfType<DataColumn>().ToList();
@@ -44,7 +44,7 @@ namespace Rsx
         {
             if (array == null) throw new ArgumentException("arra is null", "array");
 
-            IEnumerable<object> array2 = NotNulls(array, Field).Select(o => o.Field<object>(Field));
+            IEnumerable<object> array2 = EC.NotNulls(array, Field).Select(o => o.Field<object>(Field));
 
             Func<object, T> converter = o => (T)Convert.ChangeType(o, typeof(T));
 
@@ -97,7 +97,7 @@ namespace Rsx
         {
             if (array == null) throw new ArgumentException("array is null", "array");
 
-            IEnumerable<object> array2 = NotNulls(array, Field).Where(i => i.Field<object>(FieldFilter).Equals(FilterValue)).Select(o => o.Field<object>(Field));
+            IEnumerable<object> array2 = EC.NotNulls(array, Field).Where(i => i.Field<object>(FieldFilter).Equals(FilterValue)).Select(o => o.Field<object>(Field));
 
             Func<object, T> converter = o => (T)Convert.ChangeType(o, typeof(T));
 

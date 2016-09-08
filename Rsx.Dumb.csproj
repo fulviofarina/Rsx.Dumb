@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Table.cs" />
-    <Compile Include="Table.Errors.cs" />
+    <Compile Include="EC.cs" />
     <Compile Include="Table.Changes.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="File.cs" />

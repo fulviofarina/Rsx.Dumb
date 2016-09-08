@@ -7,7 +7,7 @@ using System.Windows.Forms;
 ///FULVIO
 namespace Rsx
 {
-    public partial class Dumb
+    public static partial class Dumb
     {
         public static IEnumerable<T> Cast<T>(DataView view)
         {
