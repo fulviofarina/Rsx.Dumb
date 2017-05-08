@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Rsx.Dumb.BS">
+    <Position X="3.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAgAAARAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BS.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.Caster">
+    <Position X="6.5" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Caster.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.Changes">
+    <Position X="6.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAIAAAEBAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Changes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.UIControl">
+    <Position X="3.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAKAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Control.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.Dumb">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAEAAAAAAABAAAACAAAAAAQEAACAABAAAAAAAA=</HashCode>
+      <FileName>Dumb.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.Hash">
+    <Position X="0.5" Y="3.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAQAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hash.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.IO">
+    <Position X="3.75" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAFEAAAAQAAAAgCAAAAAQAAAFAAAAAACgAgQAAE=</HashCode>
+      <FileName>IO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Dumb.Tables">
+    <Position X="9.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AMAAAAgAgAAAAQAAAAAAkEAAAAEAAgAACAAGEAAAABA=</HashCode>
+      <FileName>Tables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.EC">
+    <Position X="6.5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgYAAAAQAAAAAAAAEgAAAAAABAAIgAAACAAEIAA=</HashCode>
+      <FileName>EC.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Rsx.Encryption.AESThenHMAC">
+    <Position X="9.25" Y="6.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAABAAAAAQAAAgIAAQQABAAgAAAAEAAAAAE=</HashCode>
+      <FileName>Encryption.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="10" />
+</ClassDiagram>
