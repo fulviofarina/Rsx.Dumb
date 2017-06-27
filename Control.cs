@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Rsx.Dumb
 {
    
-        public static partial class UIControl
+        public static  class UIControl
         {
             /// <summary>
             /// Gets ToolStripTextBox control content as T-type

@@ -81,7 +81,33 @@ namespace Rsx.Dumb
                 BS.ResumeBinding();
             }
 
-            public static string[] DeLinkBS(ref BindingSource BS)
+        /// <summary>
+        /// Binds a Combo Box to a DataSource
+        /// </summary>
+        /// <param name="bsSample"></param>
+        /// <param name="namebox"></param>
+        /// <param name="column"></param>
+        public static void BindAComboBox(ref BindingSource bsSample, ref ToolStripComboBox namebox, string column)
+        {
+        
+            Binding b0 = BS.ABinding(ref bsSample, column);
+            namebox.ComboBox.DataBindings.Add(b0);
+   
+       //     namebox.AutoCompleteSource = AutoCompleteSource.ListItems;
+        //    namebox.AutoCompleteMode = AutoCompleteMode.Suggest;
+       //     namebox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            namebox.ComboBox.DataSource = bsSample;
+            namebox.ComboBox.DisplayMember = column;
+            namebox.ComboBox.ValueMember = column;
+            namebox.ComboBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            namebox.ComboBox.AutoCompleteMode = AutoCompleteMode.Suggest;
+        //    namebox.ComboBox.Items.
+          //  namebox.ComboBox.ValueMember = column;
+
+
+    }
+
+        public static string[] DeLinkBS(ref BindingSource BS)
             {
                 if (BS == null) throw new ArgumentException("BindingSource is null", "BS");
 

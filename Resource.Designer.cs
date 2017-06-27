@@ -65,12 +65,12 @@ namespace Rsx.Dumb {
         ///SET ba1=%temp%\batch1.bat
         ///SET ba2=%temp%\batch2.bat
         ///SET vb=%temp%\vb.vbs
-        ///echo call %SYSTEMROOT%\SYSNATIVE\dism /online /enable-feature /featurename:&quot;MSMQ-Container&quot; &gt; %ba1%
-        ///echo call %SYSTEMROOT%\SYSNATIVE\dism /online /enable-feature /featurename:&quot;MSMQ-Server&quot; &gt; %ba2%
-        ///REM echo %SendKeys% &quot;n&quot; &gt;&gt;  &quot;%temp%\batch1.bat&quot;
-        ///REM echo %SendKeys% &quot;n&quot; &gt;&gt;  &quot;%temp%\batch2.bat&quot;
-        ///REM echo exit &gt; &quot;%temp%\batch1.bat&quot;
-        ///echo Set UAC = CreateObject^(&quot;Shell.Applicat [rest of string was truncated]&quot;;.
+        ///echo start &quot;Container&quot; /MIN /WAIT %SYSTEMROOT%\SYSNATIVE\dism /online /enable-feature /featurename:&quot;MSMQ-Container&quot; /NoRestart &gt; %ba1%
+        ///echo start &quot;Server&quot; /MIN /WAIT %SYSTEMROOT%\SYSNATIVE\dism /online /enable-feature /featurename:&quot;MSMQ-Server&quot; /NoRestart &gt; %ba2%
+        ///REM
+        ///echo Set UAC = CreateObject^(&quot;Shell.Application&quot;^) &gt; %vb%
+        ///set params = %*:&quot;=&quot;
+        ///echo UAC.ShellExecute &quot;cmd&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string msmqx64 {
             get {
@@ -83,12 +83,12 @@ namespace Rsx.Dumb {
         ///SET ba1=%temp%\batch1.bat
         ///SET ba2=%temp%\batch2.bat
         ///SET vb=%temp%\vb.vbs
-        ///echo call %SYSTEMROOT%\system32\dism /online /enable-feature /featurename:&quot;MSMQ-Container&quot; &gt; %ba1%
-        ///echo call %SYSTEMROOT%\system32\dism /online /enable-feature /featurename:&quot;MSMQ-Server&quot; &gt; %ba2%
-        ///REM echo %SendKeys% &quot;n&quot; &gt;&gt;  &quot;%temp%\batch1.bat&quot;
-        ///REM echo %SendKeys% &quot;n&quot; &gt;&gt;  &quot;%temp%\batch2.bat&quot;
-        ///REM echo exit &gt; &quot;%temp%\batch1.bat&quot;
-        ///echo Set UAC = CreateObject^(&quot;Shell.Applicatio [rest of string was truncated]&quot;;.
+        ///echo start &quot;Container&quot; /MIN /WAIT %SYSTEMROOT%\system32\dism /online /enable-feature /featurename:&quot;MSMQ-Container&quot; /NoRestart &gt; %ba1%
+        ///echo start &quot;Container&quot; /MIN /WAIT %SYSTEMROOT%\system32\dism /online /enable-feature /featurename:&quot;MSMQ-Server&quot; /NoRestart &gt; %ba2%
+        ///REM
+        ///echo Set UAC = CreateObject^(&quot;Shell.Application&quot;^) &gt; %vb%
+        ///set params = %*:&quot;=&quot;
+        ///echo UAC.ShellExecute &quot;cmd [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string msmqx86 {
             get {

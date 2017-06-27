@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 
 ///FULVIO
 namespace Rsx.Dumb
@@ -181,10 +183,33 @@ namespace Rsx.Dumb
 
                 System.IO.File.Delete(file);
 
-                // auxiliar = null;
-            }
+        
 
-            public static byte[] MakeDTBytes<T2>( ref T2 dataTable, string startupPAth)
+
+            // auxiliar = null;
+        }
+        public static void ReadDTBytes<T>( ref byte[] auxiliar, ref T DestinyDataTable)
+        {
+            //string file = startupPath + Guid.NewGuid().ToString() + ".xml";
+
+          //  IO.WriteFileBytes(ref auxiliar, file);
+            DataTable toLoad = DestinyDataTable as DataTable;
+
+            string xml = Encoding.UTF8.GetString(auxiliar);
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            XmlNodeReader reader = new XmlNodeReader(doc);
+            toLoad.ReadXml(reader);
+
+            reader.Close();
+            reader = null;
+            doc.RemoveAll();
+            doc = null;
+                       toLoad.AcceptChanges();
+            // auxiliar = null;
+        }
+        public static byte[] MakeDTBytes<T2>( ref T2 dataTable, string startupPAth)
         {
             string afile = startupPAth + Guid.NewGuid().ToString() + ".xml";
 
@@ -196,6 +221,27 @@ namespace Rsx.Dumb
          //   dt.Dispose();
             byte[] arr = IO.ReadFileBytes(afile);
             System.IO.File.Delete(afile);
+            return arr;
+        }
+        public static byte[] MakeDTBytes<T2>(ref T2 dataTable)
+        {
+           
+        //   XmlDocument doc = new XmlDocument();
+         //  XmlNodeReader reader = new XmlNodeReader(doc);
+     
+
+            StringBuilder sb = new StringBuilder();
+            XmlWriter writer = XmlWriter.Create(sb);
+
+            DataTable dt = dataTable as DataTable;
+            dt.WriteXml(writer, XmlWriteMode.WriteSchema, true);
+
+           
+         //   writer.WriteNode(reader, true);
+            //  dt.Clear();
+            //   dt.Dispose();
+            byte[] arr =Encoding.UTF8.GetBytes(sb.ToString());
+      
             return arr;
         }
 

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace Rsx.Dumb
 {
    
-        public static partial class Caster
+        public static  class Caster
         {
             public static IEnumerable<T> Cast<T>(DataView view)
             {

@@ -7,7 +7,7 @@ using System.Linq;
 namespace Rsx.Dumb
 {
   
-        public static partial class Changes
+        public static  class Changes
         {
             public static void AcceptChanges<T>(ref IEnumerable<T> rows)
             {
