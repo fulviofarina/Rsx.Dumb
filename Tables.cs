@@ -19,6 +19,7 @@ namespace Rsx.Dumb
                 if (File.Exists(path)) //user preferences found...
                 {
                     dt.BeginLoadData();
+             
                     FileInfo info = new FileInfo(path);
                     if (info.Length < 204800)
                     {
@@ -267,23 +268,29 @@ namespace Rsx.Dumb
             {
                 System.Data.DataTable table = new System.Data.DataTable();
 
-                foreach (DataGridViewColumn col in dgv.Columns)
+            IEnumerable<DataGridViewColumn> cols = dgv.Columns.OfType<DataGridViewColumn>();
+            cols = cols.Where(o => o.Visible);
+
+                foreach (DataGridViewColumn col in cols)
                 {
                     table.Columns.Add(col.HeaderText, typeof(object), String.Empty);
                 }
 
                 System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-                foreach (DataGridViewRow row in dgv.Rows)
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    foreach (DataGridViewCell cell in row.Cells)
+                    if (cols.Contains(cell.OwningColumn))
                     {
                         list.Add(cell.Value);
                     }
-                    table.LoadDataRow(list.ToArray(), true);
-                    list.Clear();
                 }
-
+                table.LoadDataRow(list.ToArray(), true);
+                list.Clear();
+            }
+                table.TableName = dgv.Name;
                 return table;
             }
 

@@ -7,6 +7,14 @@ using System.Text.RegularExpressions;
 ///FULVIO
 namespace Rsx.Dumb
 {
+
+    public interface ICalculableRow
+    {
+        bool IsBusy { set; get; }
+        bool ToDo { set; get; }
+
+    }
+
     public static partial class RegEx
     {
         public static void DecomposeFormula(string formula, ref List<string> elements, ref List<string> moles)

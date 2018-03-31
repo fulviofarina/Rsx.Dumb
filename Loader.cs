@@ -7,6 +7,7 @@ namespace Rsx.Dumb
    
     public interface ILoader
     {
+        bool IsBusy { get; }
         void RunWorkerAsync(object argument);
         void RunWorkerAsync();
         void Set(IList<Action> LoadMethods, Action CallBackMethod = null, Action<int> ReportMethod = null, Action<Exception> ExceptionMethod = null);
@@ -22,7 +23,9 @@ namespace Rsx.Dumb
         {
         
         }
-       
+
+      //  public bool IsDisposed = false;
+   
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // if (report == null) return;
@@ -92,9 +95,13 @@ namespace Rsx.Dumb
      
         private void worker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-             callback?.Invoke();
 
             this.Dispose();
+          //  isDisposed = true;
+
+            callback?.Invoke();
+
+          
         }
 
         private void defaultExceptionReport(Exception ex)
@@ -102,10 +109,21 @@ namespace Rsx.Dumb
             throw ex;
            // MessageBox.Show(ex.Message + "\n\n" + ex.StackTrace + "\n\n" + ex.TargetSite, "Problems loading a data table content");
         }
+     //   private bool isDisposed = false;
 
         protected internal IList<Action> mainMethods;
         protected internal Action callback;
         protected internal Action<int> report;
         protected internal Action<Exception> exceptionReport;
+
+        public  new bool IsBusy
+        {
+            get
+            {
+                return base.IsBusy;
+            }
+
+          
+        }
     }
 }
