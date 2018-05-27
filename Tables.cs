@@ -201,7 +201,16 @@ namespace Rsx.Dumb
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
             XmlNodeReader reader = new XmlNodeReader(doc);
-            toLoad.ReadXml(reader);
+            try
+            {
+                toLoad.ReadXml(reader);
+            }
+            catch (Exception ex)
+            {
+
+              
+            }
+          
 
             reader.Close();
             reader = null;
