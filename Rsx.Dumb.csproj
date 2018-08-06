@@ -61,6 +61,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculateBase.cs" />
+    <Compile Include="EDB.cs">
+      <DependentUpon>EDB.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="EDB.Designer.cs">
+      <DependentUpon>EDB.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Loader.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -72,6 +80,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Strings.cs" />
     <Compile Include="Tables.cs" />
     <Compile Include="EC.cs" />
     <Compile Include="Changes.cs" />
@@ -87,6 +96,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="EDB.xsc">
+      <DependentUpon>EDB.xsd</DependentUpon>
+    </None>
+    <None Include="EDB.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>EDB.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="EDB.xss">
+      <DependentUpon>EDB.xsd</DependentUpon>
+    </None>
     <None Include="Generic.cd" />
     <None Include="Resources\msmqx64.bat" />
     <None Include="Resources\msmqx86.bat" />

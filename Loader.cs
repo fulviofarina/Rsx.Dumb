@@ -12,6 +12,7 @@ namespace Rsx.Dumb
         void RunWorkerAsync();
         void Set(IList<Action> LoadMethods, Action CallBackMethod = null, Action<int> ReportMethod = null, Action<Exception> ExceptionMethod = null);
         void Set(Action LoadMethod, Action CallBackMethod = null, Action<int> ReportMethod = null, Action<Exception> ExceptionMethod = null);
+        void CancelLoader();
     }
 
     /// <summary>
@@ -19,6 +20,12 @@ namespace Rsx.Dumb
     /// </summary>
     public partial class Loader : BackgroundWorker, ILoader
     {
+
+        public void CancelLoader()
+        {
+             if (this.IsBusy)   this.CancelAsync = true;
+        
+        }
         public Loader() : base()
         {
         
@@ -29,7 +36,7 @@ namespace Rsx.Dumb
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // if (report == null) return;
-
+            if (this.CancellationPending) return;
             if (e.UserState != null)
             {
                 SystemException ex = e.UserState as SystemException;
@@ -47,7 +54,10 @@ namespace Rsx.Dumb
 
             for (int i = 0; i < mainMethods.Count; i++)
             {
-                if (e.Cancel) continue;
+                if (this.CancellationPending)
+                {
+                    continue;
+                }
                 int perc = Convert.ToInt32(Math.Ceiling((step * i)));
                 SystemException x = null;
                 try
@@ -76,6 +86,7 @@ namespace Rsx.Dumb
             report = ReportMethod;
 
             exceptionReport = defaultExceptionReport;
+           
             if (ExceptionMethod!=null)
             {
                 exceptionReport = ExceptionMethod;
@@ -95,11 +106,19 @@ namespace Rsx.Dumb
      
         private void worker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            callback?.Invoke();
+
 
             this.Dispose();
+
+         
+
+        
+
+
           //  isDisposed = true;
 
-            callback?.Invoke();
+         
 
           
         }

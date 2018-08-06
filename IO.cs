@@ -24,6 +24,32 @@ namespace Rsx.Dumb
             "PLEASE SAVE ANY PENDING WORK\n\n" + CLICK_OK_TO_RESTART;
 
         private static string RESTART_PC_TITLE = "Restart the computer";
+
+
+        public static Uri GenerateURI(string file, int guidLenght, string folderpath, bool asHTML)
+        {
+            Uri uri = new Uri("about:blank");
+            if (System.IO.File.Exists(file))
+            {
+                string newFile = Rsx.Dumb.Strings.CachePath;
+                string fileName = file.Replace(folderpath, null);
+                int indexofPoint = fileName.LastIndexOf('.');
+                string extension = fileName.Substring(indexofPoint, fileName.Length - indexofPoint);
+                newFile += fileName.Substring(0,indexofPoint);
+                newFile += "." + Guid.NewGuid().ToString().Substring(0, guidLenght);
+                newFile += extension;
+                if (asHTML) newFile += ".html";
+                File.Copy(file, newFile, true);
+                uri = new Uri(newFile);
+            }
+
+            return uri;
+        }
+
+        /// <summary>
+        /// Installs MSMQ, The Microsoft Queuing Messaging System
+        /// </summary>
+        /// <param name="setRestart">True to restart the computer afterwards</param>
         public static void InstallMSMQ(bool setRestart = true)
         {
             DialogResult result = MessageBox.Show(MSMQ_INSTALL, MSMQ_INSTALL_TITLE, MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
@@ -47,7 +73,7 @@ namespace Rsx.Dumb
             string path = workDir + msmq + architecture + ".bat";
             System.IO.File.WriteAllText(path, content);
             //run bat files that create the VB SCRIPTS
-            IO.Process(path, string.Empty, workDir, true);
+            IO.Process(path, workDir, string.Empty, true);
 
             //run vb.vbs script!!
             string scriptFile = "vb.vbs";
@@ -55,7 +81,7 @@ namespace Rsx.Dumb
 
             path = "/c " + workDir + "\\" + scriptFile;
             string cmd = "cmd.exe";
-            IO.Process(cmd, path, workDir, true);
+            IO.Process(cmd, workDir, path, true);
 
             //scheduled 10 minutes restart
             if (setRestart) IO.RestartPC();
@@ -67,7 +93,7 @@ namespace Rsx.Dumb
             box = new RichTextBox();
             box.Text = filepath;
            
-         Form   from = new Form();
+            Form   from = new Form();
             from.Text = title;
             box.Font = new System.Drawing.Font(box.Font.FontFamily, size);
             box.Dock = DockStyle.Fill;
@@ -78,8 +104,42 @@ namespace Rsx.Dumb
             from.BringToFront();
             return box;
          }
+        /// <summary>
+        ///  Reads a file and shows it in a message box
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="title"></param>
+        public static void ReadFileToMessageBox(string filePath, string title)
+        {
+            if (!System.IO.File.Exists(filePath)) return;
+            string error = System.IO.File.ReadAllText(filePath);
+        
+            MessageBox.Show(error, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-        public static void WatchFolder(string path, string extension, ref Action<object, FileSystemEventArgs> callBack)
+        }
+
+        /// <summary>
+        /// Writes the exception content to a file
+        /// </summary>
+        /// <param name="justFileName"></param>
+        /// <param name="ex"></param>
+        public static void WriteException(string justFileName, Exception ex)
+        {
+            string error = "Severe program error: " + ex?.Message + "\n\nat code:\n\n" + ex?.StackTrace;
+            justFileName= Environment.GetFolderPath(Environment.SpecialFolder.InternetCache) + "\\" + justFileName;
+            //  if (System.IO.File.Exists(crashFile)) System.IO.File.Delete(crashFile);
+            File.AppendAllText(justFileName, error);
+        }
+
+
+        /// <summary>
+        /// Watches a folder according to the filter and extensions
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="extension"></param>
+        /// <param name="callBack"></param>
+        /// <param name="filter"></param>
+        public static void WatchFolder(string path, string extension, ref Action<object, FileSystemEventArgs> callBack, string filter = "*")
         {
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = path;
@@ -90,17 +150,43 @@ namespace Rsx.Dumb
             watcher.NotifyFilter = NotifyFilters.FileName;
             // | NotifyFilters.FileName | NotifyFilters.DirectoryName;
 
-            watcher.Filter = "*" + extension;
+            watcher.Filter = filter + extension;
             // watcher.Changed += new FileSystemEventHandler( callBack);
             watcher.Created += new FileSystemEventHandler(callBack);
             watcher.EnableRaisingEvents = true;
+        }
+
+        public static void WriteFileText(string tempFile, string Response, bool append = false)
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+            if (append) File.AppendAllText(tempFile, Response);
+            else File.WriteAllText(tempFile, Response);
+        }
+
+        public static void DeleteIfExists(string tempFile)
+        {
+            if (File.Exists(tempFile)) File.Delete(tempFile);
         }
     }
 
     public static partial class IO
     {
+
+        /// <summary>
+        /// File to use to expand compressed files
+        /// </summary>
         public static string EXPAND_EXE = "expand.exe";
 
+
+
+        /// <summary>
+        /// Gets directories and subdirectories
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static IList<string> GetDirectories(string path)
         {
             if (!System.IO.Directory.Exists(path)) return new List<string>();
@@ -117,6 +203,14 @@ namespace Rsx.Dumb
             return hs.ToList();
         }
 
+
+
+        /// <summary>
+        /// Gets the file names without the extension
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="Ext"></param>
+        /// <returns></returns>
         public static IList<string> GetFileNames(string path, string Ext)
         {
             if (!System.IO.Directory.Exists(path)) return new List<string>();
@@ -125,20 +219,38 @@ namespace Rsx.Dumb
             return new HashSet<string>(list).ToList();
         }
 
-        public static IList<System.IO.FileInfo> GetFiles(string rootpath)
+
+
+        /// <summary>
+        /// Gets a file list from a folder
+        /// </summary>
+        /// <param name="rootpath"></param>
+        /// <param name="subFolders"></param>
+        /// <returns></returns>
+        public static IList<System.IO.FileInfo> GetFiles(string rootpath, bool subFolders = true)
         {
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(rootpath);
             IEnumerable<System.IO.FileInfo> files = dir.GetFiles();
 
-            IEnumerable<System.IO.DirectoryInfo> dirs = dir.GetDirectories();
-            foreach (System.IO.DirectoryInfo d in dirs)
+            if (subFolders)
             {
-                IEnumerable<System.IO.FileInfo> fs = d.GetFiles();
-                files = files.Union(fs);
+                IEnumerable<System.IO.DirectoryInfo> dirs = dir.GetDirectories();
+                foreach (System.IO.DirectoryInfo d in dirs)
+                {
+                    IEnumerable<System.IO.FileInfo> fs = d.GetFiles();
+                    files = files.Union(fs);
+                }
             }
             return files.ToList();
         }
 
+
+        /// <summary>
+        /// Loads a file content into a RTB box and reports
+        /// </summary>
+        /// <param name="showProgress"></param>
+        /// <param name="input"></param>
+        /// <param name="file"></param>
         public static void LoadFilesIntoBoxes(Action showProgress, ref RichTextBox input, string file)
         {
             //load files
@@ -151,6 +263,11 @@ namespace Rsx.Dumb
             showProgress?.Invoke();
         }
 
+        /// <summary>
+        /// Makes a directory
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="overrider"></param>
         public static void MakeADirectory(string path, bool overrider = false)
         {
             // DirectorySecurity secutiry = new DirectorySecurity(path, AccessControlSections.Owner);
@@ -161,10 +278,10 @@ namespace Rsx.Dumb
             }
         }
 
-        public static Process Process(string path, string argument, string workDir, bool start, bool hide = true, DataReceivedEventHandler receivedHandler = null, EventHandler exited = null)
+        public static Process Process(string path, string workDir, string argument="", bool start=false, bool hide = true, DataReceivedEventHandler receivedHandler = null, EventHandler exited = null)
         {
             // int id = 0;
-            Process pro = Process(path, argument, workDir, hide, ref receivedHandler, exited);
+            Process pro = Process(path, workDir, argument, hide, ref receivedHandler, ref exited);
             // int id = pro.Id;
             if (start)
             {
@@ -179,7 +296,17 @@ namespace Rsx.Dumb
             return pro;
         }
 
-        public static Process Process(string path, string argument, string workDir, bool hide, ref DataReceivedEventHandler receivedHandler, EventHandler exited)
+        /// <summary>
+        /// Starts a process
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="workDir"></param>
+        /// <param name="argument"></param>
+        /// <param name="hide"></param>
+        /// <param name="receivedHandler"></param>
+        /// <param name="exited"></param>
+        /// <returns></returns>
+        public static Process Process(string path, string workDir, string argument, bool hide, ref DataReceivedEventHandler receivedHandler, ref EventHandler exited)
         {
             Process pro = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
@@ -214,7 +341,18 @@ namespace Rsx.Dumb
             return pro;
         }
 
-        public static double Process(Process process, string WorkingDir, string EXE, string Arguments, bool hide, bool wait, int wait_time)
+        /// <summary>
+        /// Starts a process and returns the time elapsed
+        /// </summary>
+        /// <param name="process"></param>
+        /// <param name="WorkingDir"></param>
+        /// <param name="EXE"></param>
+        /// <param name="Arguments"></param>
+        /// <param name="hide"></param>
+        /// <param name="wait"></param>
+        /// <param name="wait_time"></param>
+        /// <returns></returns>
+        public static double Process(Process process, string WorkingDir, string EXE, string Arguments="", bool hide=true, bool wait= true, int wait_time = 100000)
         {
             double span = 0;
             ProcessStartInfo info = new ProcessStartInfo(EXE);
@@ -239,6 +377,14 @@ namespace Rsx.Dumb
             return span;
         }
 
+        /// <summary>
+        /// Start process with output
+        /// </summary>
+        /// <param name="exeName"></param>
+        /// <param name="arguments"></param>
+        /// <param name="timeoutMilliseconds"></param>
+        /// <param name="exitCode"></param>
+        /// <param name="output"></param>
         public static void ProcessWithOutPut(string exeName, string arguments, int timeoutMilliseconds, out int exitCode, out string output)
         {
             using (Process process = new Process())
@@ -259,6 +405,13 @@ namespace Rsx.Dumb
             }
         }
 
+
+
+        /// <summary>
+        /// ESTO ES UN ASCO, ARREGLAR, ESTO NO PUEDE SER ASI
+        /// </summary>
+        /// <param name="File"></param>
+        /// <returns></returns>
         public static string ReadFile(string File)
         {
             // int counter = 1;
@@ -270,32 +423,39 @@ namespace Rsx.Dumb
             {
                 try
                 {
+
                     ex = null;
                     fraw = new System.IO.FileStream(File, System.IO.FileMode.Open, FileAccess.Read);
                     raw = new System.IO.StreamReader(fraw);
+                    lecture = raw.ReadToEnd();
+                  
+                    fraw.Close();
+                    fraw.Dispose();
+                    fraw = null;
+                    raw.Close();
+                    raw.Dispose();
+                    raw = null;
                 }
                 catch (Exception ex2)
                 {
-                    //sleep 2 seconds...
+                  
                     ex = ex2;
                     return lecture;
-                    // System.Threading.Thread.Sleep(2000); System.Threading.Thread.Sleep()
+                   
                 }
-                // counter++;
-
-                // if (counter == 2) return lecture;
+           
             }
 
-            lecture = raw.ReadToEnd();
-            fraw.Close();
-            fraw.Dispose();
-            fraw = null;
-            raw.Close();
-            raw.Dispose();
-            raw = null;
+       
             return lecture;
         }
 
+
+        /// <summary>
+        /// Reads the bytes from a file
+        /// </summary>
+        /// <param name="file">Full filepath</param>
+        /// <returns></returns>
         public static byte[] ReadFileBytes(string file)
         {
             FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read);
@@ -304,15 +464,20 @@ namespace Rsx.Dumb
             stream.Read(rtf, 0, size);
             stream.Close();
             stream.Dispose();
+            stream = null;
             return rtf;
         }
 
-        public static void RestartPC()
+
+        /// <summary>
+        /// Restarts PC in 600 seconds
+        /// </summary>
+        public static void RestartPC(string seconds = "600")
         {
             string cmd = "shutdown.exe";
             string argument = string.Empty;
             argument = "-c \"" + RESTART_PC + "\"" +
-            " -r -t 600 -d P:4:1";
+            " -r -t "+ seconds + " -d P:4:1";
 
             System.Diagnostics.Process.Start(cmd, argument);
 
@@ -329,10 +494,14 @@ namespace Rsx.Dumb
             System.Diagnostics.Process.Start(cmd, argument);
         }
 
-        /// <summary>
-        /// unpack a Resource
-        /// </summary>
-        public static void UnpackCABFile(string resourcePath, string destFile, string startExecutePath, bool unpack)
+       /// <summary>
+       /// Unpacks a file resource from a folder to another folder
+       /// </summary>
+       /// <param name="resourcePath">filepath to the resource</param>
+       /// <param name="destFile">destiny filepath</param>
+       /// <param name="startExecutePath">execution folder</param>
+       /// <param name="unpack">true to unpack, false to just copy the resource</param>
+        public static void UnpackCABFile(string resourcePath, string destFile, string startExecutePath, bool unpack, int wait = 100000)
         {
             if (File.Exists(resourcePath))
             {
@@ -341,19 +510,31 @@ namespace Rsx.Dumb
                 //conservar esto para unzippear
                 if (unpack)
                 {
-                    IO.Process(process, startExecutePath, EXPAND_EXE, destFile + " -F:* " + startExecutePath, false, true, 100000);
+                //    int wait = 100000;
+                    IO.Process(process, startExecutePath, EXPAND_EXE, destFile + " -F:* " + startExecutePath, false, true, wait);
                     File.Delete(destFile);
                 }
             }
         }
 
-        public static void WriteFileBytes(ref byte[] r, string destFile)
+     /// <summary>
+     /// Writes bytes to a file
+     /// </summary>
+     /// <param name="content"></param>
+     /// <param name="destFile"></param>
+        public static void WriteFileBytes(ref byte[] content, string destFile)
         {
             FileStream f = new FileStream(destFile, FileMode.Create, FileAccess.Write);
-            f.Write(r, 0, Convert.ToInt32(r.Length));
+            f.Write(content, 0, Convert.ToInt32(content.Length));
             f.Close();
         }
 
+
+        /// <summary>
+        /// a handler to the default output mode in a process. Does nothing so far
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void defaultOutputMode(object sender, DataReceivedEventArgs e)
         {
             //throw new NotImplementedException();

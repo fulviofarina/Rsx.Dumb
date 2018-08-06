@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="EDB" targetNamespace="http://tempuri.org/EDB.xsd" xmlns:mstns="http://tempuri.org/EDB.xsd" xmlns="http://tempuri.org/EDB.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="EDB" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="EDB" msprop:Generator_UserDSName="EDB">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Environment" msprop:Generator_TableClassName="EnvironmentDataTable" msprop:Generator_TableVarName="tableEnvironment" msprop:Generator_RowChangedName="EnvironmentRowChanged" msprop:Generator_TablePropName="Environment" msprop:Generator_RowDeletingName="EnvironmentRowDeleting" msprop:Generator_RowChangingName="EnvironmentRowChanging" msprop:Generator_RowEvHandlerName="EnvironmentRowChangeEventHandler" msprop:Generator_RowDeletedName="EnvironmentRowDeleted" msprop:Generator_RowClassName="EnvironmentRow" msprop:Generator_UserTableName="Environment" msprop:Generator_RowEvArgName="EnvironmentRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CurrentPath" msprop:Generator_ColumnVarNameInTable="columnCurrentPath" msprop:Generator_ColumnPropNameInRow="CurrentPath" msprop:Generator_ColumnPropNameInTable="CurrentPathColumn" msprop:Generator_UserColumnName="CurrentPath" type="xs:string" minOccurs="0" />
+              <xs:element name="Is64Bit" msprop:Generator_ColumnVarNameInTable="columnIs64Bit" msprop:Generator_ColumnPropNameInRow="Is64Bit" msprop:Generator_ColumnPropNameInTable="Is64BitColumn" msprop:Generator_UserColumnName="Is64Bit" type="xs:boolean" minOccurs="0" />
+              <xs:element name="Is64BitOS" msprop:Generator_ColumnVarNameInTable="columnIs64BitOS" msprop:Generator_ColumnPropNameInRow="Is64BitOS" msprop:Generator_ColumnPropNameInTable="Is64BitOSColumn" msprop:Generator_UserColumnName="Is64BitOS" type="xs:boolean" minOccurs="0" />
+              <xs:element name="MachineName" msprop:Generator_ColumnVarNameInTable="columnMachineName" msprop:Generator_ColumnPropNameInRow="MachineName" msprop:Generator_ColumnPropNameInTable="MachineNameColumn" msprop:Generator_UserColumnName="MachineName" type="xs:string" minOccurs="0" />
+              <xs:element name="NewLine" msprop:Generator_ColumnVarNameInTable="columnNewLine" msprop:Generator_ColumnPropNameInRow="NewLine" msprop:Generator_ColumnPropNameInTable="NewLineColumn" msprop:Generator_UserColumnName="NewLine" type="xs:string" minOccurs="0" />
+              <xs:element name="CPUCount" msprop:Generator_ColumnVarNameInTable="columnCPUCount" msprop:Generator_ColumnPropNameInRow="CPUCount" msprop:Generator_ColumnPropNameInTable="CPUCountColumn" msprop:Generator_UserColumnName="CPUCount" type="xs:int" minOccurs="0" />
+              <xs:element name="UserDomainName" msprop:Generator_ColumnVarNameInTable="columnUserDomainName" msprop:Generator_ColumnPropNameInRow="UserDomainName" msprop:Generator_ColumnPropNameInTable="UserDomainNameColumn" msprop:Generator_UserColumnName="UserDomainName" type="xs:string" minOccurs="0" />
+              <xs:element name="UserName" msprop:Generator_ColumnVarNameInTable="columnUserName" msprop:Generator_ColumnPropNameInRow="UserName" msprop:Generator_ColumnPropNameInTable="UserNameColumn" msprop:Generator_UserColumnName="UserName" type="xs:string" minOccurs="0" />
+              <xs:element name="WorkingSet" msprop:Generator_ColumnVarNameInTable="columnWorkingSet" msprop:Generator_ColumnPropNameInRow="WorkingSet" msprop:Generator_ColumnPropNameInTable="WorkingSetColumn" msprop:Generator_UserColumnName="WorkingSet" type="xs:long" minOccurs="0" />
+              <xs:element name="OSVersion" msprop:Generator_ColumnVarNameInTable="columnOSVersion" msprop:Generator_ColumnPropNameInRow="OSVersion" msprop:Generator_ColumnPropNameInTable="OSVersionColumn" msprop:Generator_UserColumnName="OSVersion" type="xs:string" minOccurs="0" />
+              <xs:element name="Ticks" msprop:Generator_ColumnVarNameInTable="columnTicks" msprop:Generator_ColumnPropNameInRow="Ticks" msprop:Generator_ColumnPropNameInTable="TicksColumn" msprop:Generator_UserColumnName="Ticks" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

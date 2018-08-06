@@ -7,14 +7,33 @@ using System.Text.RegularExpressions;
 ///FULVIO
 namespace Rsx.Dumb
 {
-
+    public interface ISetteable
+    {
+        void SetParent<T>(ref T rowParent, object[] args = null);
+    }
     public interface ICalculableRow
     {
         bool IsBusy { set; get; }
         bool ToDo { set; get; }
 
     }
+    public interface IRow
+    {
+        void Check();
 
+        bool HasErrors();
+
+        void Check(DataColumn Column);
+    }
+    public interface IColumn
+    {
+        // void DataColumnChanged(object sender, DataColumnChangeEventArgs e);
+
+        IEnumerable<DataColumn> ForbiddenNullCols
+        {
+            get;
+        }
+    }
     public static partial class RegEx
     {
         public static void DecomposeFormula(string formula, ref List<string> elements, ref List<string> moles)
@@ -37,19 +56,24 @@ namespace Rsx.Dumb
 
             string matCompo = composition.Trim();
 
-            if (matCompo.Contains(';')) matCompo = matCompo.Replace(';', ')');///
+         //   if (matCompo.Contains(';')) matCompo = matCompo.Replace(';', ')');///
 
             string[] strArray = null;
-            if (matCompo.Contains(')')) strArray = matCompo.Split(')');
+            if (matCompo.Contains('\t')) matCompo = matCompo.Replace('\t', ' ');
+            if (matCompo.Contains('\n')) matCompo = matCompo.Replace('\n',' ');
+            if (matCompo.Contains('#')) strArray = matCompo.Split('#');
+            else if (matCompo.Contains(';')) strArray = matCompo.Split(';');
+          //  else if (matCompo.Contains('\n')) strArray = matCompo.Split('\n');
             else strArray = new string[] { matCompo };
-            strArray = strArray.Where(o => !string.IsNullOrEmpty(o.Trim())).ToArray();
+            strArray = strArray.Select(o => o.Trim()).Where(o=> !string.IsNullOrEmpty(o)).ToArray();
 
             ls = new List<string[]>();
 
             for (int index = 0; index < strArray.Length; index++)
             {
-                string[] strArray2 = strArray[index].Trim().Split('(');
-                string formula = strArray2[0].Trim().Replace("#", null);
+                string[] strArray2 = strArray[index].Trim().Split(' ').Where(o=> !string.IsNullOrEmpty(o)).ToArray();
+                //      string formula = strArray2[0].Trim().Replace("#", null);
+                string formula = strArray2[0].Trim();
                 string quantity = strArray2[1].Trim();
 
                 string[] formCompo = new string[] { formula, quantity };

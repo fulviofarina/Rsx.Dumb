@@ -10,7 +10,55 @@ namespace Rsx.Dumb
    
         public static  class Caster
         {
-            public static IEnumerable<T> Cast<T>(DataView view)
+
+        public static bool IsTimeDividerOk(string timeDivider)
+        {
+            bool ok = timeDivider.Contains("m");
+            ok = ok || timeDivider.Contains("d");
+            ok = ok || timeDivider.Contains("y");
+            ok = ok || timeDivider.Contains("h");
+            ok = ok || timeDivider.Contains("s");
+            return ok;
+        }
+        public static string GetTimeDividerSuffix(string timeDivider)
+        {
+            string suffix = "seconds";
+            if (timeDivider.Contains("s")) suffix = "seconds";
+            else if (timeDivider.Contains("y")) suffix = "years";
+            else if (timeDivider.Contains("d")) suffix = "days";
+            else if (timeDivider.Contains("h")) suffix = "hours";
+            else if (timeDivider.Contains("m")) suffix = "minutes";
+            return suffix;
+        }
+        public static double GetTimeFactor(string timeDivider = "m")
+        {
+            double factor = 1;
+            if (timeDivider.CompareTo("s") == 0)
+            {
+                factor = 1;
+
+            }
+            else if (timeDivider.CompareTo("m") == 0)
+            {
+                factor = 60;
+
+            }
+            else if (timeDivider.CompareTo("h") == 0)
+            {
+                factor = 60 * 60;
+            }
+            else if (timeDivider.CompareTo("d") == 0)
+            {
+                factor = 60 * 60 * 24.0000006;
+            }
+            else if (timeDivider.CompareTo("y") == 0)
+            {
+                factor = 60 * 60 * 24.0000006 * 365.2422;
+            }
+
+            return factor;
+        }
+        public static IEnumerable<T> Cast<T>(DataView view)
             {
                 if (view == null) throw new Exception("DataView is null, Cannot Cast<T>");
 
